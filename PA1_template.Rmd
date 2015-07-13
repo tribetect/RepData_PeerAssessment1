@@ -5,13 +5,22 @@ output:
     keep_md: true
 ---
 
+[github.com/TribeTect, July 2015]
 
 ## Loading and preprocessing the data
+```{r}
+activity <- read.csv(unz("activity.zip", "activity.csv"))
+activity[["date"]] <- as.Date(activity[["date"]], "%Y-%m-%d")
+str(activity)
 
-
+```
 
 ## What is mean total number of steps taken per day?
+```{r}
+require(ggplot2)
+activity1 <- activity[complete.cases(activity),] # ignoring NA observations for this part of the assignment
 
+```
 
 
 ## What is the average daily activity pattern?
