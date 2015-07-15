@@ -7,7 +7,7 @@ output:
 
 [github.com/TribeTect, July 2015]
 
-## Loading and preprocessing the data
+## 1. Loading and preprocessing the data
 ```{r}
 activity <- read.csv(unz("activity.zip", "activity.csv"))
 activity[["date"]] <- as.Date(activity[["date"]], "%Y-%m-%d")
@@ -15,14 +15,30 @@ str(activity)
 
 ```
 
-## What is mean total number of steps taken per day?
+## 2. What is mean total number of steps taken per day?
 ```{r}
-require(ggplot2)
-activity1 <- activity[complete.cases(activity),] # ignoring NA observations for this part of the assignment
-
+activity2 <- activity[complete.cases(activity),] # ignoring NA observations for this part of the assignment
+daily_steps <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
+mean(daily_steps)
 ```
 
+### 2.1 Total number of steps per day:
+(showing first 20 daily totals)
+```{r}
+head(daily_steps, 20)
+```
 
+### 2.2 Histogram of steps per day:
+```{r}
+hist(daily_steps)
+```
+
+### 2.2 Mean and Median:
+```{r}
+mean(daily_steps)
+median(daily_steps)
+
+```
 ## What is the average daily activity pattern?
 
 
