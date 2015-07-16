@@ -90,8 +90,32 @@ cat("New mean: ", mean_daily_steps_sub, " Previous mean: ", mean_daily_steps, "\
 cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_steps, "\n")
 ```
 #### QUESTION: Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
 ### ANSWER: Same mean and median shows no impact of imputing missing data on those measures
 
-
+---
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
+```{r}
+require(dplyr)
+
+activity_sub <- mutate(activity_sub, weekday = NA)
+
+for(i in 1:nrow(activity_sub)){
+
+    weekday_i <- !(weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
+    activity_sub[i,4] = weekday_i
+
+    
+}
+
+require(lattice)
+xyplot(log(steps) ~ interval | weekday, data = activity_sub, layout = c(1,2), type = "l")
+
+
+```
+
+
+
+
+

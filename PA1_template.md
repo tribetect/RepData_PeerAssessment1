@@ -121,7 +121,7 @@ cat("4.1 Number of cases with NA values: ", sum(is.na(activity)))
 activity_sub <- activity #clone the dataset for replacing NAs
 
 for(i in 1:nrow(activity_sub)) {
-  if(is.na(activity_sub[i,1])) {#CONDITION TEST 1 - DOES THE OBS HAVE NAs
+  if(is.na(activity_sub[i,1])) {
     interval_i <- as.character(activity_sub[i,3]) #get the interval
     mean_step_i <- interval_steps[interval_i] #get mean steps for interval
     activity_sub[i,1] <- round(as.numeric(mean_step_i)) #replace NA value 
@@ -157,8 +157,56 @@ cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_ste
 ## New median:  10765  Previous mean:  10765
 ```
 #### QUESTION: Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
 ### ANSWER: Same mean and median shows no impact of imputing missing data on those measures
 
-
+---
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
+
+```r
+require(dplyr)
+```
+
+```
+## Loading required package: dplyr
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+activity_sub <- mutate(activity_sub, weekday = NA)
+
+for(i in 1:nrow(activity_sub)){
+
+    weekday_i <- !(weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
+    activity_sub[i,4] = weekday_i
+
+    
+}
+
+require(lattice)
+```
+
+```
+## Loading required package: lattice
+```
+
+```r
+xyplot(log(steps) ~ interval | weekday, data = activity_sub, layout = c(1,2), type = "l")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+
+
+
+
+
