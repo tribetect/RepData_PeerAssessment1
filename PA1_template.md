@@ -73,24 +73,31 @@ median(daily_steps)
 ## [1] 10765
 ```
 ## 3. What is the average daily activity pattern?
+
 ### 3.1 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
 
 ```r
 interval_steps <- tapply(X = activity2$steps, INDEX = activity2$interval, FUN = "mean")
+
+max_mean_steps <- as.data.frame(interval_steps[interval_steps == max(interval_steps)])
+max_mean_x = row.names(max_mean_steps) 
+max_mean_y = max_mean_steps[[1]]
+
 plot(x = row.names(interval_steps), y = interval_steps, xlab = "Interval", ylab = "Mean steps", type = "l")
+points(x = max_mean_x, y = max_mean_y, pch = 19, col = "red")
+abline(v = max_mean_x, col = "red")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
-  
-### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```r
-max_mean_steps <- as.data.frame(interval_steps[interval_steps == max(interval_steps)])
-row.names(max_mean_steps)
+cat("The interval with highest mean: ", max_mean_x)
 ```
 
 ```
-## [1] "835"
+## The interval with highest mean:  835
 ```
 
 ## 4. Imputing missing values
