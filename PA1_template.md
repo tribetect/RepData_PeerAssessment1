@@ -55,22 +55,22 @@ hist(daily_steps)
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
-### 2.2 Mean and Median:
+```r
+mean_daily_steps <- mean(daily_steps)
+median_daily_steps <- median(daily_steps)
+cat("Mean Daily Steps: ", mean_daily_steps, "\n")
+```
+
+```
+## Mean Daily Steps:  10766.19
+```
 
 ```r
-mean(daily_steps)
+cat("Median Daily Steps: ", median_daily_steps, "\n")
 ```
 
 ```
-## [1] 10766.19
-```
-
-```r
-median(daily_steps)
-```
-
-```
-## [1] 10765
+## Median Daily Steps:  10765
 ```
 ## 3. What is the average daily activity pattern?
 
@@ -90,7 +90,7 @@ points(x = max_mean_x, y = max_mean_y, pch = 19, col = "red")
 abline(v = max_mean_x, col = "red")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 ```r
 cat("The interval with highest mean: ", max_mean_x)
@@ -128,30 +128,37 @@ for(i in 1:nrow(activity_sub)) {
       
   }
 }
+```
+### 4.4 Histogram of daily steps, with new dataset, mean and median
 
-# recheck for complete cases - just to be sure no NAs exist? is this necessary??
-nrow(activity)
+```r
+#re calculate daily steps
+daily_steps_sub <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
+hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+
+```r
+mean_daily_steps_sub <- mean(daily_steps_sub)
+median_daily_steps_sub <- median(daily_steps_sub)
+cat("New mean: ", mean_daily_steps_sub, " Previous mean: ", mean_daily_steps, "\n" )
 ```
 
 ```
-## [1] 17568
+## New mean:  10766.19  Previous mean:  10766.19
 ```
 
 ```r
-sum(complete.cases(activity))
+cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_steps, "\n")
 ```
 
 ```
-## [1] 15264
+## New median:  10765  Previous mean:  10765
 ```
-
-```r
-sum(complete.cases(activity_sub))
-```
-
-```
-## [1] 17568
-```
+#### QUESTION: Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+### ANSWER: Same mean and median shows no impact of imputing missing data on those measures
 
 
-## Are there differences in activity patterns between weekdays and weekends?
+
+## 5. Are there differences in activity patterns between weekdays and weekends?

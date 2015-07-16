@@ -30,12 +30,11 @@ head(daily_steps, 20)
 ### 2.2 Histogram of steps per day:
 ```{r}
 hist(daily_steps)
-```
+mean_daily_steps <- mean(daily_steps)
+median_daily_steps <- median(daily_steps)
+cat("Mean Daily Steps: ", mean_daily_steps, "\n")
+cat("Median Daily Steps: ", median_daily_steps, "\n")
 
-### 2.2 Mean and Median:
-```{r}
-mean(daily_steps)
-median(daily_steps)
 ```
 ## 3. What is the average daily activity pattern?
 
@@ -72,7 +71,7 @@ cat("4.1 Number of cases with NA values: ", sum(is.na(activity)))
 activity_sub <- activity #clone the dataset for replacing NAs
 
 for(i in 1:nrow(activity_sub)) {
-  if(is.na(activity_sub[i,1])) {#CONDITION TEST 1 - DOES THE OBS HAVE NAs
+  if(is.na(activity_sub[i,1])) {
     interval_i <- as.character(activity_sub[i,3]) #get the interval
     mean_step_i <- interval_steps[interval_i] #get mean steps for interval
     activity_sub[i,1] <- round(as.numeric(mean_step_i)) #replace NA value 
@@ -80,6 +79,19 @@ for(i in 1:nrow(activity_sub)) {
   }
 }
 ```
+### 4.4 Histogram of daily steps, with new dataset, mean and median
+```{r}
+#re calculate daily steps
+daily_steps_sub <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
+hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue")
+mean_daily_steps_sub <- mean(daily_steps_sub)
+median_daily_steps_sub <- median(daily_steps_sub)
+cat("New mean: ", mean_daily_steps_sub, " Previous mean: ", mean_daily_steps, "\n" )
+cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_steps, "\n")
+```
+#### QUESTION: Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+### ANSWER: Same mean and median shows no impact of imputing missing data on those measures
 
 
-## Are there differences in activity patterns between weekdays and weekends?
+
+## 5. Are there differences in activity patterns between weekdays and weekends?
