@@ -130,6 +130,38 @@ abline(v = max_mean_x, col = &quot;red&quot;)</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>4. Imputing missing values</h2>
+<div id="report-count-of-observations-with-nas" class="section level3">
+<h3>4.1 Report count of observations with NAs</h3>
+<pre class="r"><code>cat(&quot;4.1 Number of cases with NA values: &quot;, sum(is.na(activity)))</code></pre>
+<pre><code>## 4.1 Number of cases with NA values:  2304</code></pre>
+</div>
+<div id="devise-a-strategy-to-replace-missing-values" class="section level3">
+<h3>4.2 Devise a strategy to replace missing values</h3>
+<div id="missing-values-will-be-replaced-with-corresponding-interval-means-rounded-off" class="section level4">
+<h4>Missing values will be replaced with corresponding interval means, rounded off</h4>
+</div>
+</div>
+<div id="create-a-new-dataset-with-na-values-replaced" class="section level3">
+<h3>4.3 Create a new dataset with NA values replaced</h3>
+<pre class="r"><code>activity_sub &lt;- activity #clone the dataset for replacing NAs
+
+for(i in 1:nrow(activity_sub)) {
+  if(is.na(activity_sub[i,1])) {#CONDITION TEST 1 - DOES THE OBS HAVE NAs
+    interval_i &lt;- as.character(activity_sub[i,3]) #get the interval
+    mean_step_i &lt;- interval_steps[interval_i] #get mean steps for interval
+    activity_sub[i,1] &lt;- round(as.numeric(mean_step_i)) #replace NA value 
+      
+  }
+}
+
+# recheck for complete cases - just to be sure no NAs exist? is this necessary??
+nrow(activity)</code></pre>
+<pre><code>## [1] 17568</code></pre>
+<pre class="r"><code>sum(complete.cases(activity))</code></pre>
+<pre><code>## [1] 15264</code></pre>
+<pre class="r"><code>sum(complete.cases(activity_sub))</code></pre>
+<pre><code>## [1] 17568</code></pre>
+</div>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>

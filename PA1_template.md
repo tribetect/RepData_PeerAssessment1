@@ -101,7 +101,57 @@ cat("The interval with highest mean: ", max_mean_x)
 ```
 
 ## 4. Imputing missing values
+### 4.1 Report count of observations with NAs
 
+```r
+cat("4.1 Number of cases with NA values: ", sum(is.na(activity)))
+```
+
+```
+## 4.1 Number of cases with NA values:  2304
+```
+
+### 4.2 Devise a strategy to replace missing values 
+#### Missing values will be replaced with corresponding interval means, rounded off 
+
+### 4.3 Create a new dataset with NA values replaced
+
+
+```r
+activity_sub <- activity #clone the dataset for replacing NAs
+
+for(i in 1:nrow(activity_sub)) {
+  if(is.na(activity_sub[i,1])) {#CONDITION TEST 1 - DOES THE OBS HAVE NAs
+    interval_i <- as.character(activity_sub[i,3]) #get the interval
+    mean_step_i <- interval_steps[interval_i] #get mean steps for interval
+    activity_sub[i,1] <- round(as.numeric(mean_step_i)) #replace NA value 
+      
+  }
+}
+
+# recheck for complete cases - just to be sure no NAs exist? is this necessary??
+nrow(activity)
+```
+
+```
+## [1] 17568
+```
+
+```r
+sum(complete.cases(activity))
+```
+
+```
+## [1] 15264
+```
+
+```r
+sum(complete.cases(activity_sub))
+```
+
+```
+## [1] 17568
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
