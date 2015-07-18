@@ -7,14 +7,6 @@
 ```r
 activity <- read.csv(unz("activity.zip", "activity.csv"))
 activity[["date"]] <- as.Date(activity[["date"]], "%Y-%m-%d")
-str(activity)
-```
-
-```
-## 'data.frame':	17568 obs. of  3 variables:
-##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
-##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 ```
 
 ## 2. What is mean total number of steps taken per day?
@@ -22,35 +14,29 @@ str(activity)
 ```r
 activity2 <- activity[complete.cases(activity),] # ignoring NA observations for this part of the assignment
 daily_steps <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
-mean(daily_steps)
+cat("Mean daily steps (ignoring NAs): ", mean(daily_steps))
 ```
 
 ```
-## [1] 10766.19
+## Mean daily steps (ignoring NAs):  10766.19
 ```
 
-### 2.1 Total number of steps per day:
-(showing first 20 daily totals)
+(showing first  daily totals)
 
 ```r
-head(daily_steps, 20)
+cat("2.1 Total number of steps per day: \n", head(daily_steps, 10), " ... \n", tail(daily_steps, 10), " (first and last 10 records)")
 ```
 
 ```
-## 2012-10-02 2012-10-03 2012-10-04 2012-10-05 2012-10-06 2012-10-07 
-##        126      11352      12116      13294      15420      11015 
-## 2012-10-09 2012-10-10 2012-10-11 2012-10-12 2012-10-13 2012-10-14 
-##      12811       9900      10304      17382      12426      15098 
-## 2012-10-15 2012-10-16 2012-10-17 2012-10-18 2012-10-19 2012-10-20 
-##      10139      15084      13452      10056      11829      10395 
-## 2012-10-21 2012-10-22 
-##       8821      13460
+## 2.1 Total number of steps per day: 
+##  126 11352 12116 13294 15420 11015 12811 9900 10304 17382  ... 
+##  4472 12787 20427 21194 14478 11834 11162 13646 10183 7047  (first and last 10 records)
 ```
 
 ### 2.2 Histogram of steps per day:
 
 ```r
-hist(daily_steps)
+hist(daily_steps, xlab = "Daily Steps", col = "red")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
@@ -98,6 +84,15 @@ cat("The interval with highest mean: ", max_mean_x)
 
 ```
 ## The interval with highest mean:  835
+```
+
+```r
+cat("\n Highest mean: ", max_mean_y)
+```
+
+```
+## 
+##  Highest mean:  206.1698
 ```
 
 ## 4. Imputing missing values
@@ -165,11 +160,10 @@ cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_ste
 ## 5. Are there differences in activity patterns between weekdays and weekends?
 
 ```r
-require(dplyr)
+require(dplyr, quietly = TRUE)
 ```
 
 ```
-## Loading required package: dplyr
 ## 
 ## Attaching package: 'dplyr'
 ## 
@@ -183,30 +177,28 @@ require(dplyr)
 ```
 
 ```r
-activity_sub <- mutate(activity_sub, weekday = NA)
+activity_sub <- mutate(activity_sub, day_type = "Weekday")
 
 for(i in 1:nrow(activity_sub)){
 
-    weekday_i <- !(weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
-    activity_sub[i,4] = weekday_i
-
+    weekend_i <- (weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
+    
+    if(weekend_i) {activity_sub[i,4] = "Weekend"}
     
 }
 
-require(lattice)
+table(activity_sub$day_type)
 ```
 
 ```
-## Loading required package: lattice
+## 
+## Weekday Weekend 
+##   12960    4608
 ```
 
 ```r
-xyplot(log(steps) ~ interval | weekday, data = activity_sub, layout = c(1,2), type = "l")
+require(lattice, quietly = TRUE)
+xyplot(log(steps) ~ interval | day_type, data = activity_sub, layout = c(1,2), type = "l")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
-
-
-
-
-

@@ -11,25 +11,22 @@ output:
 ```{r}
 activity <- read.csv(unz("activity.zip", "activity.csv"))
 activity[["date"]] <- as.Date(activity[["date"]], "%Y-%m-%d")
-str(activity)
 ```
 
 ## 2. What is mean total number of steps taken per day?
 ```{r}
 activity2 <- activity[complete.cases(activity),] # ignoring NA observations for this part of the assignment
 daily_steps <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
-mean(daily_steps)
+cat("Mean daily steps (ignoring NAs): ", mean(daily_steps))
 ```
 
-### 2.1 Total number of steps per day:
-(showing first 20 daily totals)
 ```{r}
-head(daily_steps, 20)
+cat("2.1 Total number of steps per day: \n", head(daily_steps, 10), " ... \n", tail(daily_steps, 10), " (first and last 10 records)")
 ```
 
 ### 2.2 Histogram of steps per day:
 ```{r}
-hist(daily_steps)
+hist(daily_steps, xlab = "Daily Steps", col = "red")
 mean_daily_steps <- mean(daily_steps)
 median_daily_steps <- median(daily_steps)
 cat("Mean Daily Steps: ", mean_daily_steps, "\n")
@@ -53,6 +50,7 @@ points(x = max_mean_x, y = max_mean_y, pch = 19, col = "red")
 abline(v = max_mean_x, col = "red")
 
 cat("The interval with highest mean: ", max_mean_x)
+cat("\n Highest mean: ", max_mean_y)
 
 ```
 
@@ -83,7 +81,7 @@ for(i in 1:nrow(activity_sub)) {
 ```{r}
 #re calculate daily steps
 daily_steps_sub <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
-hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue")
+hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue", main = "Daily Steps (NAs substituted with interval means)")
 mean_daily_steps_sub <- mean(daily_steps_sub)
 median_daily_steps_sub <- median(daily_steps_sub)
 cat("New mean: ", mean_daily_steps_sub, " Previous mean: ", mean_daily_steps, "\n" )
@@ -97,25 +95,20 @@ cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_ste
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
 ```{r}
-require(dplyr)
+require(dplyr, warn.conflicts = FALSE)
 
-activity_sub <- mutate(activity_sub, weekday = NA)
+activity_sub <- mutate(activity_sub, day_type = "Weekday")
 
 for(i in 1:nrow(activity_sub)){
 
-    weekday_i <- !(weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
-    activity_sub[i,4] = weekday_i
-
+    weekend_i <- (weekdays(activity_sub[i,2]) == "Saturday") | (weekdays(activity_sub[i,2]) == "Sunday")
+    
+    if(weekend_i) {activity_sub[i,4] = "Weekend"}
     
 }
 
-require(lattice)
-xyplot(log(steps) ~ interval | weekday, data = activity_sub, layout = c(1,2), type = "l")
+require(lattice, quietly = TRUE)
+xyplot(log(steps) ~ interval | day_type, data = activity_sub, layout = c(1,2), type = "l")
 
 
 ```
-
-
-
-
-
