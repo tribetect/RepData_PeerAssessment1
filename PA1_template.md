@@ -177,14 +177,7 @@ for(i in 1:nrow(activity_sub)){
     
 }
 
-require(lattice, quietly = TRUE)
-xyplot(log(steps) ~ interval | day_type, data = activity_sub, layout = c(1,2), type = "l")
-```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
-# Using ggplot:
-
-```r
 require(ggplot2, warn.conflicts = FALSE)
 ```
 
@@ -193,9 +186,9 @@ require(ggplot2, warn.conflicts = FALSE)
 ```
 
 ```r
-q <- qplot(interval, steps, data = activity_sub, facets = day_type~., geom = "line")
-q
+g <- ggplot(data = activity_sub, mapping = aes(interval, steps))
+g + facet_grid(day_type~.) + stat_summary(fun.y="mean", colour="red", geom="line") + labs(title = "Average steps by interval: Weekday vs. Weekend")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
