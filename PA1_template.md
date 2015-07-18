@@ -35,7 +35,7 @@ cat("2.1 Total number of steps per day: \n", head(daily_steps, 10), " ... \n", t
 ### 2.2 Histogram of steps per day:
 
 ```r
-hist(daily_steps, xlab = "Daily Steps", col = "red")
+hist(daily_steps, xlab = "Daily Steps", col = "red", main = "Histogram of Daily Steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
@@ -70,9 +70,15 @@ max_mean_steps <- as.data.frame(interval_steps[interval_steps == max(interval_st
 max_mean_x = row.names(max_mean_steps) 
 max_mean_y = max_mean_steps[[1]]
 
-plot(x = row.names(interval_steps), y = interval_steps, xlab = "Interval", ylab = "Mean steps", type = "l")
+plot(x = row.names(interval_steps), y = interval_steps, xlab = "Interval", ylab = "Mean steps", type = "l", main = "Time series plot of the average number of steps taken")
 points(x = max_mean_x, y = max_mean_y, pch = 19, col = "red")
 abline(v = max_mean_x, col = "red")
+
+text(max_mean_x, max_mean_y, labels = max_mean_y, adj = c(-.1,1.5), col = "red")
+text(max_mean_x, max_mean_y, labels = "Maximum ave. steps: ", adj = c(-.1,0), col = "red")
+
+text(max_mean_x, 0, labels = max_mean_x, adj = c(-.1,1), col = "red")
+text(max_mean_x, 0, labels = "Interval with maximum ave. steps: ", adj = c(0,-.5), col = "red")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
