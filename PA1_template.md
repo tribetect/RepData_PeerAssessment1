@@ -21,7 +21,6 @@ cat("Mean daily steps (ignoring NAs): ", mean(daily_steps))
 ## Mean daily steps (ignoring NAs):  10766.19
 ```
 
-(showing first  daily totals)
 
 ```r
 cat("2.1 Total number of steps per day: \n", head(daily_steps, 10), " ... \n", tail(daily_steps, 10), " (first and last 10 records)")
@@ -129,7 +128,7 @@ for(i in 1:nrow(activity_sub)) {
 ```r
 #re calculate daily steps
 daily_steps_sub <- tapply(X = activity2$steps,INDEX = activity2$date, FUN = "sum")
-hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue")
+hist(daily_steps_sub, xlab = "Total Daily Steps", col = "blue", main = "Daily Steps (NAs substituted with interval means)")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
@@ -160,20 +159,11 @@ cat("New median: ", median_daily_steps_sub, " Previous mean: ", median_daily_ste
 ## 5. Are there differences in activity patterns between weekdays and weekends?
 
 ```r
-require(dplyr, quietly = TRUE)
+require(dplyr, warn.conflicts = FALSE)
 ```
 
 ```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
+## Loading required package: dplyr
 ```
 
 ```r
@@ -187,18 +177,25 @@ for(i in 1:nrow(activity_sub)){
     
 }
 
-table(activity_sub$day_type)
-```
-
-```
-## 
-## Weekday Weekend 
-##   12960    4608
-```
-
-```r
 require(lattice, quietly = TRUE)
 xyplot(log(steps) ~ interval | day_type, data = activity_sub, layout = c(1,2), type = "l")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+# Using ggplot:
+
+```r
+require(ggplot2, warn.conflicts = FALSE)
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
+q <- qplot(interval, steps, data = activity_sub, facets = day_type~., geom = "line")
+q
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+
